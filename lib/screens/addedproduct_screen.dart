@@ -172,7 +172,7 @@ class _AddedProductScreenState extends State<AddedProductScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Price: ${product['price'] ?? 'N/A'} EUR',
+                              'Price:€ ${product['price'] ?? 'N/A'} ',
                               style: const TextStyle(fontSize: 14),
                             ),
                             Text(

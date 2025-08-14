@@ -3,6 +3,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pos_scan/API/product_details_api.dart';
+import 'package:pos_scan/Models/product_model.dart';
 import 'package:pos_scan/services/getAppKey.dart';
 import 'package:pos_scan/services/scan_services.dart';
 
@@ -22,6 +23,7 @@ class AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController categoryController = TextEditingController();
 
   final ProductDetailsApi productApi = ProductDetailsApi();
+  final ProductDetailsApi product = ProductDetailsApi();
   List<String> categories = [];
   Scanner productScan = Scanner();
 
@@ -79,6 +81,17 @@ class AddProductScreenState extends State<AddProductScreen> {
         const SnackBar(
           content: Text(
             'Please fill all the fields!',
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return 0;
+    } else if (barcode == '-1' || barcode.length < 4) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'No Barcode Scanned! Please scan the barcode again',
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
           backgroundColor: Colors.redAccent,
@@ -155,10 +168,53 @@ class AddProductScreenState extends State<AddProductScreen> {
                   icon: Icons.qr_code_scanner,
                 ).copyWith(
                   suffixIcon: IconButton(
-                    icon: const Icon(Icons.document_scanner, color: Colors.blueAccent),
+                    icon: const Icon(Icons.document_scanner,
+                        color: Colors.blueAccent),
                     onPressed: () async {
                       String barcodeRes = await productScan.scanBarcode();
                       setState(() => barcodeController.text = barcodeRes);
+
+                      try {
+                        Product productData =
+                            await product.fetchProductData(barcodeRes);
+                        if (productData.barCode.isNotEmpty) {
+                           barcodeController.clear();
+                           if (globalStatusCode == 200) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title:  Text(
+                                  'Product Found !!',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                content:  Text(
+                                  'Product Already Exists: ${productData.name}',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                     
+                                    },
+                                    child: const Text(
+                                      'Ok',
+                                      style: TextStyle(
+                                          color: Colors.green, fontSize: 18),
+                                    ),
+                                  ),
+                                  
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                      } catch (e) {
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   const SnackBar(
+                        //       content: Text('error loadind product. Please try again')),
+                        // );
+                      }
                     },
                   ),
                 ),
@@ -251,10 +307,13 @@ class AddProductScreenState extends State<AddProductScreen> {
                 ).copyWith(
                   suffixIcon: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
-                      value: taxController.text.isNotEmpty ? taxController.text : null,
+                      value: taxController.text.isNotEmpty
+                          ? taxController.text
+                          : null,
                       hint: const Text("Select"),
                       items: ["0%", "9%", "21%"]
-                          .map((v) => DropdownMenuItem(value: v, child: Text(v)))
+                          .map(
+                              (v) => DropdownMenuItem(value: v, child: Text(v)))
                           .toList(),
                       onChanged: (val) {
                         setState(() => taxController.text = val ?? '');

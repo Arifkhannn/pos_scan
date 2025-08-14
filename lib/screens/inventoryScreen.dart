@@ -43,8 +43,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
   ProductDetailsApi productApi = ProductDetailsApi();
 
   void sendBarcodeToAPI(String barcode) async {
+    print(barcode);
     try {
       Product productData = await productApi.fetchProductData(barcode);
+      print(productData);
 
       // Proceed with navigation only if product data is valid
       if (productData.barCode.isNotEmpty) {
@@ -250,7 +252,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Price: ₹${filteredProducts[index].price}"),
+                              Text("Price: €${filteredProducts[index].price}"),
                               Text("Tax: ${filteredProducts[index].tax}"),
                             ],
                           ),
