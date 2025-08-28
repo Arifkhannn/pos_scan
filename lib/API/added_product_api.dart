@@ -7,7 +7,7 @@ class AddedProductApi {
   Future<List<dynamic>> getAddedProducts() async {
     try {
       String uniqueCode = await getAppKey();
-      final url = Uri.parse('https://pos.dftech.in/pos/added-products');
+      final url = Uri.parse('es');
       final response = await http.get(url, headers: {
         'Authorization': uniqueCode,
       });

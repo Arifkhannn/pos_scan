@@ -213,7 +213,7 @@ class AddProductScreenState extends State<AddProductScreen> {
                         // ScaffoldMessenger.of(context).showSnackBar(
                         //   const SnackBar(
                         //       content: Text('error loadind product. Please try again')),
-                        // );
+                        // );m, 
                       }
                     },
                   ),

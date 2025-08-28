@@ -13,6 +13,7 @@ import 'package:pos_scan/screens/history_screen.dart';
 import 'package:pos_scan/screens/inventoryScreen.dart';
 import 'package:pos_scan/screens/no_barcode.dart';
 import 'package:pos_scan/screens/submit_screen.dart';
+import 'package:pos_scan/screens/xy_report.dart';
 import 'package:pos_scan/services/getAppKey.dart';
 import 'package:pos_scan/services/google_Scan.dart';
 import 'package:pos_scan/services/scan_services.dart';
@@ -127,22 +128,34 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(0),
-        child: SizedBox.shrink(),
-      ),
+     appBar: AppBar(
+  backgroundColor: Colors.grey[100], // Changed background color to blueGrey
+  elevation: 0,
+  leading: IconButton(
+    icon: const Icon(Icons.menu, color: Color.fromARGB(255, 0, 0, 0)), // Changed icon color to white for contrast
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReportsScreen(),
+        ),
+      );
+    },
+  ),
+  title: const Text(
+    'POS Infinity',
+    textAlign: TextAlign.center,
+    style: TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.w600,
+      color: Colors.grey, // Changed text color to white for contrast
+    ),
+  ),
+  centerTitle: true, // This property centers the title
+),
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 40),
-            const Text(
-              'POS Infinity',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: Colors.blueGrey,
-              ),
-            ),
             const SizedBox(height: 30),
             Expanded(
               child: Padding(
